@@ -1,9 +1,13 @@
 export default function({ dispatch }) {
-  return next => next => {
+  return next => action => {
     if (!action.payload || !action.payload.then) {
       return next(action);
     }
 
-    console.log('We dont have a promise', action);
+    action.payload
+      .then(function(response) {
+        const newAction = { ...action, payload: response };
+        dispatch(newAction);
+      });
   };
 }
